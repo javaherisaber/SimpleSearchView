@@ -33,6 +33,7 @@
                 android:background="@color/colorPrimary"
                 android:hint="This is my hint"
                 app:hintColor="@color/colorAccent"
+                app:voiceSearchLang="fa_IR"
                 android:textSize="16sp"
                 android:fontFamily="sans-serif-smallcaps"
                 android:textColor="@color/colorPrimary"

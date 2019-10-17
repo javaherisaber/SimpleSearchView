@@ -81,6 +81,7 @@ public class SimpleSearchView extends FrameLayout {
     private boolean isSearchOpen = false;
     private boolean isClearingFocus = false;
     private String voiceSearchPrompt = "";
+    private String voiceSearchLanguage = "en";
     @Style
     private int style = STYLE_BAR;
 
@@ -215,6 +216,17 @@ public class SimpleSearchView extends FrameLayout {
             }
         }
 
+        if (typedArray.hasValue(R.styleable.SimpleSearchView_voiceSearchLang)) {
+            TypedValue tv = new TypedValue();
+            typedArray.getValue(R.styleable.SimpleSearchView_voiceSearchLang, tv);
+            if (tv.type == TypedValue.TYPE_STRING) {
+                voiceSearchLanguage = typedArray.getString(R.styleable.SimpleSearchView_voiceSearchLang);
+            } else if (tv.type == TypedValue.TYPE_REFERENCE) {
+                int res = typedArray.getResourceId(R.styleable.SimpleSearchView_android_fontFamily, -1);
+                voiceSearchLanguage = getResources().getString(res);
+            }
+        }
+
         if (typedArray.hasValue(R.styleable.SimpleSearchView_android_textSize)) {
             setTextSize(typedArray.getDimension(R.styleable.SimpleSearchView_android_textSize, getResources().getDimension(R.dimen.default_text_size)));
         }
@@ -317,7 +329,7 @@ public class SimpleSearchView extends FrameLayout {
         }
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
-
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, voiceSearchLanguage);
         activity.startActivityForResult(intent, REQUEST_VOICE_SEARCH);
     }
 

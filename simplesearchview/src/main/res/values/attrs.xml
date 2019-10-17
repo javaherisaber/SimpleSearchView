@@ -19,6 +19,7 @@
         <attr name="voiceSearch" format="boolean" />
 
         <attr name="voiceSearchPrompt" format="string" />
+        <attr name="voiceSearchLang" format="reference|string" />
 
         <attr name="android:hint" format="string" />
         <attr name="android:inputType" />
