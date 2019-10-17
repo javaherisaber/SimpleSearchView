@@ -95,6 +95,7 @@ public class SimpleSearchView extends FrameLayout {
     private TabLayout tabLayout;
     private int tabLayoutInitialHeight;
 
+    private OnQuerySubmitListener onQuerySubmitListener;
     private OnQueryTextListener onQueryChangeListener;
     private SearchViewListener searchViewListener;
 
@@ -360,7 +361,9 @@ public class SimpleSearchView extends FrameLayout {
     private void onSubmitQuery() {
         CharSequence submittedQuery = searchEditText.getText();
         if (submittedQuery != null && TextUtils.getTrimmedLength(submittedQuery) > 0) {
-            if (onQueryChangeListener == null || !onQueryChangeListener.onQueryTextSubmit(submittedQuery.toString())) {
+            if (onQueryChangeListener == null || onQuerySubmitListener == null ||
+                    !onQueryChangeListener.onQueryTextSubmit(submittedQuery.toString()) ||
+                    !onQuerySubmitListener.onQueryTextSubmit(submittedQuery.toString())) {
                 closeSearch();
                 searchIsClosing = true;
                 searchEditText.setText(null);
@@ -837,6 +840,10 @@ public class SimpleSearchView extends FrameLayout {
         this.revealAnimationCenter = revealAnimationCenter;
     }
 
+    public void setOnQuerySubmitListener(OnQuerySubmitListener listener) {
+        this.onQuerySubmitListener = listener;
+    }
+
     /**
      * @param listener listens to query changes
      */
@@ -900,6 +907,14 @@ public class SimpleSearchView extends FrameLayout {
         }
     }
 
+    public interface OnQuerySubmitListener {
+
+        /**
+         * @param query the query text
+         * @return true to override the default action
+         */
+        boolean onQueryTextSubmit(String query);
+    }
 
     public interface OnQueryTextListener {
 
