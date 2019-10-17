@@ -23,6 +23,8 @@
         <attr name="android:hint" format="string" />
         <attr name="android:inputType" />
         <attr name="android:textColor" format="color" />
+        <attr name="android:fontFamily" format="reference|string" />
+        <attr name="android:textSize" format="dimension" />
 
         <attr name="type" format="enum">
             <enum name="bar" value="0" />

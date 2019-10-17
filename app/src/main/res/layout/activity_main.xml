@@ -31,11 +31,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/colorPrimary"
+                android:hint="This is my hint"
+                app:hintColor="@color/colorAccent"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:textColor="@color/colorPrimary"
                 app:type="card"
                 app:voiceSearch="true"
                 tools:visibility="visible" />
         </FrameLayout>
-
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"

@@ -10,6 +10,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.os.Parcelable;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,8 +32,10 @@ import android.widget.ImageButton;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.FontRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.ImageViewCompat;
 
 import com.ferfalk.simplesearchview.utils.ContextUtils;
@@ -199,6 +203,20 @@ public class SimpleSearchView extends FrameLayout {
 
         if (typedArray.hasValue(R.styleable.SimpleSearchView_android_textColor)) {
             setTextColor(typedArray.getColor(R.styleable.SimpleSearchView_android_textColor, getResources().getColor(R.color.default_textColor)));
+        }
+
+        if (typedArray.hasValue(R.styleable.SimpleSearchView_android_fontFamily)) {
+            TypedValue tv = new TypedValue();
+            typedArray.getValue(R.styleable.SimpleSearchView_android_fontFamily, tv);
+            if (tv.type == TypedValue.TYPE_STRING) {
+                setFontFamily(typedArray.getString(R.styleable.SimpleSearchView_android_fontFamily));
+            } else if (tv.type == TypedValue.TYPE_REFERENCE) {
+                setFontFamily(typedArray.getResourceId(R.styleable.SimpleSearchView_android_fontFamily, -1));
+            }
+        }
+
+        if (typedArray.hasValue(R.styleable.SimpleSearchView_android_textSize)) {
+            setTextSize(typedArray.getDimension(R.styleable.SimpleSearchView_android_textSize, getResources().getDimension(R.dimen.default_text_size)));
         }
 
         typedArray.recycle();
@@ -654,6 +672,18 @@ public class SimpleSearchView extends FrameLayout {
      */
     public void setBackIconDrawable(Drawable drawable) {
         backButton.setImageDrawable(drawable);
+    }
+
+    public void setTextSize(float size) {
+        searchEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+    }
+
+    public void setFontFamily(@FontRes int resId) {
+        searchEditText.setTypeface(ResourcesCompat.getFont(context, resId));
+    }
+
+    public void setFontFamily(String res) {
+        searchEditText.setTypeface(Typeface.create(res, Typeface.NORMAL));
     }
 
     /**
