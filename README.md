@@ -1,9 +1,8 @@
 # SimpleSearchView
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
-[![Release](https://img.shields.io/github/release/Ferfalk/SimpleSearchView/all.svg?style=flat)](https://jitpack.io/#Ferfalk/SimpleSearchView)
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-SimpleSearchView-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/7287)
+[![Release](https://jitpack.io/v/javaherisaber/SimpleSearchView.svg)](https://jitpack.io/#javaherisaber/SimpleSearchView)
 
-A simple SearchView for Android based on Material Design
+A simple SearchView for Android based on Material Design (edited from [Ferfalk](https://github.com/Ferfalk/SimpleSearchView) repository)
 
 * API 16+ *(Reveal animation for API 21 and above, fade animation otherwise)*
 * Two styles
@@ -27,7 +26,7 @@ allprojects {
 ```
 Add the Gradle dependency:
 ```groovy
-implementation 'com.github.Ferfalk:SimpleSearchView:0.1.4'
+implementation "com.github.javaherisaber:SimpleSearchView:$version.simpleSearchView"
 ```
 
 
@@ -283,6 +282,16 @@ revealCenter.x -= DimensUtils.convertDpToPx(EXTRA_REVEAL_CENTER_PADDING, this);
     <!-- Change search textColor -->
     <item name="android:textColor">@color/sample</item>
 
+    <!-- Change search font -->
+    <item name="android:fontFamily">@font/YourFont</item>
+    <item name="android:fontFamily">sans-serif</item>
+    
+    <!-- Change search textSize -->
+    <item name="android:textSize">16sp</item>
+        
+    <!-- voice search language -->
+    <item name="voiceSearchLang">en</item>
+    
     <!-- Search bar/card background -->
     <item name="searchBackground">@drawable/sample</item>
 
