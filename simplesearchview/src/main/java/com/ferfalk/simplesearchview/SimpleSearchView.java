@@ -100,7 +100,7 @@ public class SimpleSearchView extends FrameLayout {
     private SearchViewListener searchViewListener;
 
     private boolean searchIsClosing = false;
-    private boolean keepQuery = false;
+    private boolean keepQuery = true;
 
     public SimpleSearchView(Context context) {
         this(context, null);
@@ -408,6 +408,7 @@ public class SimpleSearchView extends FrameLayout {
         }
 
         searchEditText.setText(keepQuery ? query : null);
+        searchEditText.setSelection(keepQuery ? query.length() : 0); // move cursor to last position of text
         searchEditText.requestFocus();
 
         if (animate) {
