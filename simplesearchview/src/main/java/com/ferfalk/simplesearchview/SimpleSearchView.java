@@ -16,12 +16,6 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.speech.RecognizerIntent;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
-import android.support.v4.widget.ImageViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -34,11 +28,18 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.core.widget.ImageViewCompat;
+
 import com.ferfalk.simplesearchview.utils.ContextUtils;
 import com.ferfalk.simplesearchview.utils.DimensUtils;
 import com.ferfalk.simplesearchview.utils.EditTextReflectionUtils;
 import com.ferfalk.simplesearchview.utils.SimpleAnimationListener;
 import com.ferfalk.simplesearchview.utils.SimpleAnimationUtils;
+import com.google.android.material.tabs.TabLayout;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

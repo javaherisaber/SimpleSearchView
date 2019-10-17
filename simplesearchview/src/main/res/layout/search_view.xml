@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/searchContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,7 +26,8 @@
             android:textColorHint="@color/default_textColorHint"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@id/buttonClear"
-            app:layout_constraintStart_toEndOf="@id/buttonBack" />
+            app:layout_constraintStart_toEndOf="@id/buttonBack"
+            tools:ignore="Autofill" />
 
         <ImageButton
             android:id="@+id/buttonBack"
@@ -65,5 +66,5 @@
             android:layout_height="1dp"
             android:background="#0D000000"
             app:layout_constraintBottom_toBottomOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
