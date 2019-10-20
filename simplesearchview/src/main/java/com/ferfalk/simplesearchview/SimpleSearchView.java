@@ -37,6 +37,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.ImageViewCompat;
+import androidx.fragment.app.Fragment;
 
 import com.ferfalk.simplesearchview.utils.ContextUtils;
 import com.ferfalk.simplesearchview.utils.DimensUtils;
@@ -73,6 +74,7 @@ public class SimpleSearchView extends FrameLayout {
     }
 
     private Context context;
+    private Fragment fragment;
     private int animationDuration = SimpleAnimationUtils.ANIMATION_DURATION_DEFAULT;
     private Point revealAnimationCenter;
     private CharSequence query;
@@ -328,7 +330,12 @@ public class SimpleSearchView extends FrameLayout {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, voiceSearchLanguage);
-        activity.startActivityForResult(intent, REQUEST_VOICE_SEARCH);
+
+        if (this.fragment != null) {
+            this.fragment.startActivityForResult(intent, REQUEST_VOICE_SEARCH);
+        } else {
+            activity.startActivityForResult(intent, REQUEST_VOICE_SEARCH);
+        }
     }
 
     private void clearSearch() {
@@ -839,9 +846,25 @@ public class SimpleSearchView extends FrameLayout {
     }
 
     /**
+     * Receive activity result in fragment
+     */
+    public void setOnQuerySubmitListener(Fragment fragment, OnQuerySubmitListener listener) {
+        this.fragment = fragment;
+        this.onQuerySubmitListener = listener;
+    }
+
+    /**
      * @param listener listens to query changes
      */
     public void setOnQueryTextListener(OnQueryTextListener listener) {
+        onQueryChangeListener = listener;
+    }
+
+    /**
+     * Receive activity result in fragment
+     */
+    public void setOnQueryTextListener(Fragment fragment, OnQueryTextListener listener) {
+        this.fragment = fragment;
         onQueryChangeListener = listener;
     }
 
