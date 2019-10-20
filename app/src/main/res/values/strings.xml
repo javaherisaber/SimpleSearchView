@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">SimpleSearchView Example</string>
     <string name="app_subtitle">SimpleSearchView</string>
     <string name="tab_text_1">Tab 1</string>

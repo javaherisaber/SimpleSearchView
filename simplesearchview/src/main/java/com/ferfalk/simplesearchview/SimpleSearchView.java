@@ -99,7 +99,6 @@ public class SimpleSearchView extends FrameLayout {
     private OnQueryTextListener onQueryChangeListener;
     private SearchViewListener searchViewListener;
 
-    private boolean searchIsClosing = false;
     private boolean keepQuery = true;
 
     public SimpleSearchView(Context context) {
@@ -244,9 +243,7 @@ public class SimpleSearchView extends FrameLayout {
         searchEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!searchIsClosing) {
                     SimpleSearchView.this.onTextChanged(s);
-                }
             }
         });
 
@@ -361,13 +358,12 @@ public class SimpleSearchView extends FrameLayout {
     private void onSubmitQuery() {
         CharSequence submittedQuery = searchEditText.getText();
         if (submittedQuery != null && TextUtils.getTrimmedLength(submittedQuery) > 0) {
-            if (onQueryChangeListener == null || onQuerySubmitListener == null ||
-                    !onQueryChangeListener.onQueryTextSubmit(submittedQuery.toString()) ||
-                    !onQuerySubmitListener.onQueryTextSubmit(submittedQuery.toString())) {
-                closeSearch();
-                searchIsClosing = true;
-                searchEditText.setText(null);
-                searchIsClosing = false;
+            if (onQueryChangeListener == null ||
+                    !onQueryChangeListener.onQueryTextSubmit(submittedQuery.toString())) {
+                if (onQuerySubmitListener == null ||
+                        !onQuerySubmitListener.onQueryTextSubmit(submittedQuery.toString())) {
+                    closeSearch();
+                }
             }
         }
     }
@@ -451,9 +447,6 @@ public class SimpleSearchView extends FrameLayout {
             return;
         }
 
-        searchIsClosing = true;
-        searchEditText.setText(null);
-        searchIsClosing = false;
         clearFocus();
 
         if (animate) {
