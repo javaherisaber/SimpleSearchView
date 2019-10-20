@@ -74,6 +74,7 @@ public class SimpleSearchView extends FrameLayout {
     }
 
     private Context context;
+    private Activity activity;
     private Fragment fragment;
     private int animationDuration = SimpleAnimationUtils.ANIMATION_DURATION_DEFAULT;
     private Point revealAnimationCenter;
@@ -318,11 +319,6 @@ public class SimpleSearchView extends FrameLayout {
     }
 
     private void voiceSearch() {
-        Activity activity = ContextUtils.scanForActivity(context);
-        if (activity == null) {
-            return;
-        }
-
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         if (voiceSearchPrompt != null && voiceSearchPrompt.isEmpty()) {
             intent.putExtra(RecognizerIntent.EXTRA_PROMPT, voiceSearchPrompt);
@@ -333,8 +329,8 @@ public class SimpleSearchView extends FrameLayout {
 
         if (this.fragment != null) {
             this.fragment.startActivityForResult(intent, REQUEST_VOICE_SEARCH);
-        } else {
-            activity.startActivityForResult(intent, REQUEST_VOICE_SEARCH);
+        } else if (this.activity != null){
+            this.activity.startActivityForResult(intent, REQUEST_VOICE_SEARCH);
         }
     }
 
@@ -841,7 +837,8 @@ public class SimpleSearchView extends FrameLayout {
         this.revealAnimationCenter = revealAnimationCenter;
     }
 
-    public void setOnQuerySubmitListener(OnQuerySubmitListener listener) {
+    public void setOnQuerySubmitListener(Activity activity, OnQuerySubmitListener listener) {
+        this.activity = activity;
         this.onQuerySubmitListener = listener;
     }
 
@@ -856,7 +853,8 @@ public class SimpleSearchView extends FrameLayout {
     /**
      * @param listener listens to query changes
      */
-    public void setOnQueryTextListener(OnQueryTextListener listener) {
+    public void setOnQueryTextListener(Activity activity, OnQueryTextListener listener) {
+        this.activity = activity;
         onQueryChangeListener = listener;
     }
 
