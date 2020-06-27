@@ -42,8 +42,6 @@ import androidx.fragment.app.Fragment;
 import com.ferfalk.simplesearchview.utils.ContextUtils;
 import com.ferfalk.simplesearchview.utils.DimensUtils;
 import com.ferfalk.simplesearchview.utils.EditTextReflectionUtils;
-import com.ferfalk.simplesearchview.utils.SimpleAnimationListener;
-import com.ferfalk.simplesearchview.utils.SimpleAnimationUtils;
 import com.google.android.material.tabs.TabLayout;
 
 import java.lang.annotation.Retention;
@@ -53,9 +51,6 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-/**
- * @author Fernando A. H. Falkiewicz
- */
 public class SimpleSearchView extends FrameLayout {
     public static final int REQUEST_VOICE_SEARCH = 735;
     public static final int CARD_CORNER_RADIUS = 4;
@@ -76,7 +71,6 @@ public class SimpleSearchView extends FrameLayout {
     private Context context;
     private Activity activity;
     private Fragment fragment;
-    private int animationDuration = SimpleAnimationUtils.ANIMATION_DURATION_DEFAULT;
     private Point revealAnimationCenter;
     private CharSequence query;
     private CharSequence oldQuery;
@@ -246,7 +240,7 @@ public class SimpleSearchView extends FrameLayout {
         searchEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    SimpleSearchView.this.onTextChanged(s);
+                SimpleSearchView.this.onTextChanged(s);
             }
         });
 
@@ -290,7 +284,6 @@ public class SimpleSearchView extends FrameLayout {
         SavedState savedState = new SavedState(superState);
         savedState.query = query != null ? query.toString() : null;
         savedState.isSearchOpen = isSearchOpen;
-        savedState.animationDuration = animationDuration;
         savedState.keepQuery = keepQuery;
 
         return savedState;
@@ -306,12 +299,11 @@ public class SimpleSearchView extends FrameLayout {
         SavedState savedState = (SavedState) state;
 
         query = savedState.query;
-        animationDuration = savedState.animationDuration;
         voiceSearchPrompt = savedState.voiceSearchPrompt;
         keepQuery = savedState.keepQuery;
 
         if (savedState.isSearchOpen) {
-            showSearch(false);
+            showSearch();
             setQuery(savedState.query, false);
         }
 
@@ -329,7 +321,7 @@ public class SimpleSearchView extends FrameLayout {
 
         if (this.fragment != null) {
             this.fragment.startActivityForResult(intent, REQUEST_VOICE_SEARCH);
-        } else if (this.activity != null){
+        } else if (this.activity != null) {
             this.activity.startActivityForResult(intent, REQUEST_VOICE_SEARCH);
         }
     }
@@ -389,19 +381,7 @@ public class SimpleSearchView extends FrameLayout {
         this.keepQuery = keepQuery;
     }
 
-    /**
-     * Shows search with animation
-     */
     public void showSearch() {
-        showSearch(true);
-    }
-
-    /**
-     * Shows search
-     *
-     * @param animate true to animate
-     */
-    public void showSearch(boolean animate) {
         if (isSearchOpen()) {
             return;
         }
@@ -410,22 +390,8 @@ public class SimpleSearchView extends FrameLayout {
         searchEditText.setSelection(keepQuery ? query.length() : 0); // move cursor to last position of text
         searchEditText.requestFocus();
 
-        if (animate) {
-            SimpleAnimationUtils.AnimationListener animationListener = new SimpleAnimationListener() {
-                @Override
-                public boolean onAnimationEnd(@NonNull View view) {
-                    if (searchViewListener != null) {
-                        searchViewListener.onSearchViewShownAnimation();
-                    }
-                    return false;
-                }
-            };
-            SimpleAnimationUtils.revealOrFadeIn(this, animationDuration, animationListener, getRevealAnimationCenter()).start();
-        } else {
-            setVisibility(View.VISIBLE);
-        }
-
-        hideTabLayout(animate);
+        setVisibility(View.VISIBLE);
+        hideTabLayout();
 
         isSearchOpen = true;
         if (searchViewListener != null) {
@@ -434,40 +400,16 @@ public class SimpleSearchView extends FrameLayout {
     }
 
     /**
-     * Closes search with animation
+     * Closes search
      */
     public void closeSearch() {
-        closeSearch(true);
-    }
-
-    /**
-     * Closes search
-     *
-     * @param animate true if should be animated
-     */
-    public void closeSearch(boolean animate) {
         if (!isSearchOpen()) {
             return;
         }
 
         clearFocus();
-
-        if (animate) {
-            SimpleAnimationUtils.AnimationListener animationListener = new SimpleAnimationListener() {
-                @Override
-                public boolean onAnimationEnd(@NonNull View view) {
-                    if (searchViewListener != null) {
-                        searchViewListener.onSearchViewClosedAnimation();
-                    }
-                    return false;
-                }
-            };
-            SimpleAnimationUtils.hideOrFadeOut(this, animationDuration, animationListener, getRevealAnimationCenter()).start();
-        } else {
-            setVisibility(View.INVISIBLE);
-        }
-
-        showTabLayout(animate);
+        setVisibility(View.INVISIBLE);
+        showTabLayout();
 
         isSearchOpen = false;
         if (searchViewListener != null) {
@@ -506,51 +448,23 @@ public class SimpleSearchView extends FrameLayout {
     }
 
     /**
-     * Shows the attached TabLayout with animation
+     * Shows the attached TabLayout
      */
     public void showTabLayout() {
-        showTabLayout(true);
-    }
-
-    /**
-     * Shows the attached TabLayout
-     *
-     * @param animate true if should be animated
-     */
-    public void showTabLayout(boolean animate) {
         if (tabLayout == null) {
             return;
         }
-
-        if (animate) {
-            SimpleAnimationUtils.verticalSlideView(tabLayout, 0, tabLayoutInitialHeight, animationDuration).start();
-        } else {
-            tabLayout.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * Hides the attached TabLayout with animation
-     */
-    public void hideTabLayout() {
-        hideTabLayout(true);
+        tabLayout.setVisibility(View.VISIBLE);
     }
 
     /**
      * Hides the attached TabLayout
-     *
-     * @param animate true if should be animated
      */
-    public void hideTabLayout(boolean animate) {
+    public void hideTabLayout() {
         if (tabLayout == null) {
             return;
         }
-
-        if (animate) {
-            SimpleAnimationUtils.verticalSlideView(tabLayout, tabLayout.getHeight(), 0, animationDuration).start();
-        } else {
-            tabLayout.setVisibility(View.GONE);
-        }
+        tabLayout.setVisibility(View.GONE);
     }
 
     /**
@@ -799,20 +713,6 @@ public class SimpleSearchView extends FrameLayout {
 
     public boolean isSearchOpen() {
         return isSearchOpen;
-    }
-
-    /**
-     * @return current reveal or fade animations duration
-     */
-    public int getAnimationDuration() {
-        return animationDuration;
-    }
-
-    /**
-     * @param duration duration, in ms, of the reveal or fade animations
-     */
-    public void setAnimationDuration(int duration) {
-        animationDuration = duration;
     }
 
     /**
