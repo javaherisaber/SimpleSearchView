@@ -17,7 +17,9 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.speech.RecognizerIntent;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -95,7 +97,7 @@ public class SimpleSearchView extends FrameLayout {
 
     private OnQuerySubmitListener onQuerySubmitListener;
     private OnQueryClearListener onQueryClearListener;
-    private OnQueryTextListener onQueryChangeListener;
+    private OnQueryTextChangeListener onQueryChangeListener;
     private SearchViewListener searchViewListener;
 
     private boolean keepQuery = true;
@@ -239,7 +241,17 @@ public class SimpleSearchView extends FrameLayout {
             return true;
         });
 
-        searchEditText.addTextChangedListener(new SimpleTextWatcher() {
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // no action required
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // no action required
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 SimpleSearchView.this.onTextChanged(s);
@@ -330,9 +342,6 @@ public class SimpleSearchView extends FrameLayout {
 
     private void clearSearch() {
         searchEditText.setText(null);
-        if (onQueryChangeListener != null) {
-            onQueryChangeListener.onQueryTextCleared();
-        }
         if (onQueryClearListener != null) {
             onQueryClearListener.onQueryCleared();
         }
@@ -361,10 +370,8 @@ public class SimpleSearchView extends FrameLayout {
             submittedQuery = null;
             searchEditText.setText("");
         }
-        if (onQueryChangeListener == null || !onQueryChangeListener.onQueryTextSubmit(submittedQuery)) {
-            if (onQuerySubmitListener == null || !onQuerySubmitListener.onQueryTextSubmit(submittedQuery)) {
-                closeSearch();
-            }
+        if (onQuerySubmitListener == null || !onQuerySubmitListener.onQueryTextSubmit(submittedQuery)) {
+            closeSearch();
         }
     }
 
@@ -444,7 +451,17 @@ public class SimpleSearchView extends FrameLayout {
             }
         });
 
-        this.tabLayout.addOnTabSelectedListener(new SimpleOnTabSelectedListener() {
+        this.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                // do nothing
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // do nothing
+            }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 closeSearch();
@@ -768,7 +785,7 @@ public class SimpleSearchView extends FrameLayout {
     /**
      * @param listener listens to query changes
      */
-    public void setOnQueryTextListener(Activity activity, OnQueryTextListener listener) {
+    public void setOnQueryTextChangeListener(Activity activity, OnQueryTextChangeListener listener) {
         this.activity = activity;
         onQueryChangeListener = listener;
     }
@@ -776,7 +793,7 @@ public class SimpleSearchView extends FrameLayout {
     /**
      * Receive activity result in fragment
      */
-    public void setOnQueryTextListener(Fragment fragment, OnQueryTextListener listener) {
+    public void setOnQueryTextChangeListener(Fragment fragment, OnQueryTextChangeListener listener) {
         this.fragment = fragment;
         onQueryChangeListener = listener;
     }
@@ -854,28 +871,12 @@ public class SimpleSearchView extends FrameLayout {
         void onQueryCleared();
     }
 
-    public interface OnQueryTextListener {
-
-        /**
-         * @param query the query text
-         * @return true to override the default action
-         */
-        boolean onQueryTextSubmit(@Nullable String query);
-
+    public interface OnQueryTextChangeListener {
         /**
          * @param newText the query text
-         * @return true to override the default action
          */
-        boolean onQueryTextChange(String newText);
-
-        /**
-         * Called when the query text is cleared by the user.
-         *
-         * @return true to override the default action
-         */
-        boolean onQueryTextCleared();
+        void onQueryTextChange(String newText);
     }
-
 
     public interface SearchViewListener {
 
@@ -888,15 +889,5 @@ public class SimpleSearchView extends FrameLayout {
          * Called instantly when the search closes
          */
         void onSearchViewClosed();
-
-        /**
-         * Called at the end of the show animation
-         */
-        void onSearchViewShownAnimation();
-
-        /**
-         * Called at the end of the close animation
-         */
-        void onSearchViewClosedAnimation();
     }
 }
