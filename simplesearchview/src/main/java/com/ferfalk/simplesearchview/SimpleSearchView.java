@@ -35,6 +35,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.FontRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.fragment.app.Fragment;
@@ -351,14 +352,14 @@ public class SimpleSearchView extends FrameLayout {
     }
 
     private void onSubmitQuery() {
-        CharSequence submittedQuery = searchEditText.getText();
-        if (submittedQuery != null && TextUtils.getTrimmedLength(submittedQuery) > 0) {
-            if (onQueryChangeListener == null ||
-                    !onQueryChangeListener.onQueryTextSubmit(submittedQuery.toString())) {
-                if (onQuerySubmitListener == null ||
-                        !onQuerySubmitListener.onQueryTextSubmit(submittedQuery.toString())) {
-                    closeSearch();
-                }
+        String submittedQuery = searchEditText.getText().toString().trim();
+        if (submittedQuery.isEmpty()) {
+            submittedQuery = null;
+            searchEditText.setText("");
+        }
+        if (onQueryChangeListener == null || !onQueryChangeListener.onQueryTextSubmit(submittedQuery)) {
+            if (onQuerySubmitListener == null || !onQuerySubmitListener.onQueryTextSubmit(submittedQuery)) {
+                closeSearch();
             }
         }
     }
@@ -828,7 +829,7 @@ public class SimpleSearchView extends FrameLayout {
          * @param query the query text
          * @return true to override the default action
          */
-        boolean onQueryTextSubmit(String query);
+        boolean onQueryTextSubmit(@Nullable String query);
     }
 
     public interface OnQueryTextListener {
@@ -837,7 +838,7 @@ public class SimpleSearchView extends FrameLayout {
          * @param query the query text
          * @return true to override the default action
          */
-        boolean onQueryTextSubmit(String query);
+        boolean onQueryTextSubmit(@Nullable String query);
 
         /**
          * @param newText the query text
