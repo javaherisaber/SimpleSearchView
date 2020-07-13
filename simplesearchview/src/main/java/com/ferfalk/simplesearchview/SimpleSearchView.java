@@ -94,6 +94,7 @@ public class SimpleSearchView extends FrameLayout {
     private int tabLayoutInitialHeight;
 
     private OnQuerySubmitListener onQuerySubmitListener;
+    private OnQueryClearListener onQueryClearListener;
     private OnQueryTextListener onQueryChangeListener;
     private SearchViewListener searchViewListener;
 
@@ -331,6 +332,9 @@ public class SimpleSearchView extends FrameLayout {
         searchEditText.setText(null);
         if (onQueryChangeListener != null) {
             onQueryChangeListener.onQueryTextCleared();
+        }
+        if (onQueryClearListener != null) {
+            onQueryClearListener.onQueryCleared();
         }
     }
 
@@ -751,6 +755,16 @@ public class SimpleSearchView extends FrameLayout {
         this.onQuerySubmitListener = listener;
     }
 
+    public void setOnQueryClearListener(Activity activity, OnQueryClearListener listener) {
+        this.activity = activity;
+        this.onQueryClearListener = listener;
+    }
+
+    public void setOnQueryClearListener(Fragment fragment, OnQueryClearListener listener) {
+        this.fragment = fragment;
+        this.onQueryClearListener = listener;
+    }
+
     /**
      * @param listener listens to query changes
      */
@@ -830,6 +844,14 @@ public class SimpleSearchView extends FrameLayout {
          * @return true to override the default action
          */
         boolean onQueryTextSubmit(@Nullable String query);
+    }
+
+    public interface OnQueryClearListener {
+
+        /**
+         * When user click on clear button
+         */
+        void onQueryCleared();
     }
 
     public interface OnQueryTextListener {
